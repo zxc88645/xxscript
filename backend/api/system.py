@@ -172,14 +172,7 @@ def get_mouse_position():
 @router.post("/listener/start")
 def start_listener():
     """啟動監聽器"""
-    if not key_listener.running:
-        # 同步熱鍵
-        enabled_scripts = script_service.get_enabled_scripts()
-        key_listener.clear_all()
-        for script in enabled_scripts:
-            if script.hotkey:
-                key_listener.register_hotkey(script.hotkey, script.id, script.content)
-        key_listener.start()
+    refresh_listener_hotkeys()
     return {"status": "ok", "message": "監聽器已啟動"}
 
 
@@ -188,3 +181,23 @@ def stop_listener():
     """停止監聽器"""
     key_listener.stop()
     return {"status": "ok", "message": "監聽器已停止"}
+
+
+def refresh_listener_hotkeys():
+    """
+    重新載入並應用所有熱鍵設定
+    此函數會被其他 API 調用以確保熱鍵設定即時生效
+    同時也會確保監聽器處於啟動狀態
+    """
+    # 同步熱鍵
+    enabled_scripts = script_service.get_enabled_scripts()
+    key_listener.clear_all()
+
+    print(f"正在更新熱鍵設定，共 {len(enabled_scripts)} 個啟用腳本")
+    for script in enabled_scripts:
+        if script.hotkey:
+            key_listener.register_hotkey(script.hotkey, script.id, script.content)
+
+    # 確保監聽器處於啟動狀態 (全自動模式)
+    if not key_listener.running:
+        key_listener.start()

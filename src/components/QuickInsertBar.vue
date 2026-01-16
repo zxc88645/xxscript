@@ -16,9 +16,9 @@
     <button
       @click="$emit('insert-click')"
       class="px-3 py-1.5 text-xs font-medium text-text-muted hover:text-primary hover:bg-bg-surface rounded-lg transition-all border border-transparent hover:border-border-base flex items-center gap-1.5"
-      title="插入點擊"
+      title="插入滑鼠"
     >
-      <span>🖱️</span> 點擊
+      <span>🖱️</span> 滑鼠
     </button>
     <button
       @click="$emit('insert-key')"

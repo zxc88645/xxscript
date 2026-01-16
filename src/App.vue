@@ -20,25 +20,13 @@
               ]"
             ></div>
             <span class="text-sm font-medium text-text-muted">
-              狀態：{{ listenerRunning ? '監聽中' : '已停止' }}
+              狀態：{{ listenerRunning ? '監聽中 (全自動)' : '已停止' }}
             </span>
           </div>
         </div>
 
         <div class="flex items-center gap-3">
-          <button
-            @click="toggleListener"
-            :class="[
-              'px-4 py-2 rounded-xl font-medium transition-all flex items-center gap-2',
-              listenerRunning
-                ? 'bg-red-500 hover:bg-red-600 text-white'
-                : 'bg-green-500 hover:bg-green-600 text-white',
-            ]"
-          >
-            <span v-if="listenerRunning">⏹️</span>
-            <span v-else>▶️</span>
-            {{ listenerRunning ? '停止監聽' : '啟動監聽' }}
-          </button>
+          <!-- 監聽按鈕已移除，改為全自動管理 -->
         </div>
       </header>
 
@@ -389,7 +377,7 @@ const handleExecute = () => {
   }
 };
 
-const { listenerRunning, toggleListener } = useKeyListener();
+const { listenerRunning } = useKeyListener();
 
 const { isRecording, startRecording, stopRecording } = useRecorder(selectedScript);
 

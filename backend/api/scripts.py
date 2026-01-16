@@ -4,6 +4,8 @@
 
 from fastapi import APIRouter, HTTPException
 
+# 引用刷新監聽器的函數 (延遲引用或直接引用，這裡直接引用，因為 system.py 不依賴 scripts.py)
+from api.system import refresh_listener_hotkeys
 from models.schemas import (
     Script,
     ScriptCheckRequest,
@@ -30,7 +32,9 @@ def get_scripts():
 @router.post("", response_model=Script)
 def create_script(script: ScriptCreate):
     """建立新腳本"""
-    return script_service.create_script(script)
+    result = script_service.create_script(script)
+    refresh_listener_hotkeys()
+    return result
 
 
 @router.post("/check", response_model=ScriptCheckResponse)
@@ -55,6 +59,7 @@ def update_script(script_id: str, update: ScriptUpdate):
     script = script_service.update_script(script_id, update)
     if not script:
         raise HTTPException(status_code=404, detail="腳本不存在")
+    refresh_listener_hotkeys()
     return script
 
 
@@ -64,4 +69,5 @@ def delete_script(script_id: str):
     success = script_service.delete_script(script_id)
     if not success:
         raise HTTPException(status_code=404, detail="腳本不存在")
+    refresh_listener_hotkeys()
     return {"status": "ok", "message": "腳本已刪除"}
