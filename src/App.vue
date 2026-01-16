@@ -286,9 +286,11 @@
 </template>
 
 <script setup lang="ts">
-import { shallowRef } from 'vue';
+import { shallowRef, watch } from 'vue';
 import * as monaco from 'monaco-editor';
 import type { editor } from 'monaco-editor';
+import { useMonaco } from '@guolao/vue-monaco-editor';
+// ... (imports remain)
 import AppSidebar from './components/AppSidebar.vue';
 import ScriptList from './components/ScriptList.vue';
 import QuickInsertBar from './components/QuickInsertBar.vue';
@@ -326,8 +328,11 @@ const MONACO_EDITOR_OPTIONS = {
 };
 
 const editorRef = shallowRef<editor.IStandaloneCodeEditor | null>(null);
+let decorationsCollection: editor.IEditorDecorationsCollection | null = null; // Store decorations
+
 const handleMount = (editor: editor.IStandaloneCodeEditor) => {
   editorRef.value = editor;
+  decorationsCollection = editor.createDecorationsCollection([]);
 };
 
 // 使用 Composables
@@ -349,7 +354,34 @@ const {
   stopEngine,
   pauseEngine,
   resumeEngine,
+  currentLine, // Added
+  currentScriptId, // Added
 } = useScriptEngine();
+
+// Watch for line changes to highlight
+watch([currentLine, currentScriptId, selectedScript], ([line, runId, selScript]) => {
+  if (!editorRef.value || !decorationsCollection) return;
+
+  // Clear if not running or mismatch or invalid line
+  if (!line || !runId || !selScript || runId !== selScript.id) {
+    decorationsCollection.clear();
+    return;
+  }
+
+  // Update Highlight
+  decorationsCollection.set([
+    {
+      range: new monaco.Range(line, 1, line, 1),
+      options: {
+        isWholeLine: true,
+        className: 'current-execution-line',
+      },
+    },
+  ]);
+
+  // Use revealLine instead of center to avoid jumpy behavior if possible, or center if far
+  editorRef.value.revealLineInCenter(line, monaco.editor.ScrollType.Smooth);
+});
 
 const handleExecute = () => {
   if (selectedScript.value) {
@@ -378,32 +410,58 @@ const { captureHotkey, startCapture, stopCapture } = useHotkeyCapture(
   saveCurrentScript,
 );
 
-// 防抖的檢查函數
-const debouncedCheck = debounce(async () => {
-  if (!editorRef.value || !selectedScript.value) return;
+const { monacoRef } = useMonaco();
+
+// 執行檢查的函數
+const performCheck = async () => {
+  if (!editorRef.value || !selectedScript.value || !monacoRef.value) return;
 
   const issues = await checkCurrentScript();
   const model = editorRef.value.getModel();
+  const monacoInstance = monacoRef.value;
 
   if (model) {
-    const markers = issues.map((issue) => ({
-      severity:
-        issue.severity === 'error' ? monaco.MarkerSeverity.Error : monaco.MarkerSeverity.Warning,
-      message: issue.message,
-      startLineNumber: issue.line,
-      startColumn: issue.column,
-      endLineNumber: issue.line,
-      endColumn: issue.column + 1,
-    }));
-    monaco.editor.setModelMarkers(model, 'owner', markers);
+    const markers = issues.map((issue) => {
+      // 計算結束列，預設為行尾
+      const maxCol = model.getLineMaxColumn(issue.line);
+
+      return {
+        severity:
+          issue.severity === 'error'
+            ? monacoInstance.MarkerSeverity.Error
+            : monacoInstance.MarkerSeverity.Warning,
+        message: issue.message,
+        startLineNumber: issue.line,
+        startColumn: issue.column,
+        endLineNumber: issue.line,
+        endColumn: maxCol,
+      };
+    });
+    monacoInstance.editor.setModelMarkers(model, 'owner', markers);
   }
-}, 1000); // 1秒後檢查
+};
+
+// 防抖的檢查函數 (編輯時使用)
+const debouncedCheck = debounce(performCheck, 1000);
 
 // 監聽內容變化自動檢查
 const handleChange = () => {
   saveCurrentScript();
   debouncedCheck();
 };
+
+// 監聽腳本切換，立即檢查
+watch(
+  () => selectedScript.value?.id,
+  (newId) => {
+    if (newId) {
+      // 等待編輯器內容更新後再檢查
+      setTimeout(() => {
+        performCheck();
+      }, 100);
+    }
+  },
+);
 
 const handleJumpToIssue = (issue: ScriptCheckIssue) => {
   if (editorRef.value) {
@@ -413,3 +471,10 @@ const handleJumpToIssue = (issue: ScriptCheckIssue) => {
   }
 };
 </script>
+
+<style>
+.current-execution-line {
+  background-color: rgba(234, 179, 8, 0.2);
+  border-left: 3px solid #eab308;
+}
+</style>

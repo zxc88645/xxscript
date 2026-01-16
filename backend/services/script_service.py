@@ -88,18 +88,26 @@ class ScriptService:
         使用 AST 進行基礎語法檢查，並嘗試使用 ruff 進行 lint
         """
         issues = []
+        source_lines = content.splitlines()
+
+        def get_line_content(line_no: int) -> str | None:
+            if 1 <= line_no <= len(source_lines):
+                return source_lines[line_no - 1].strip()
+            return None
 
         # 1. 基礎 AST 語法檢查
         try:
             ast.parse(content)
         except SyntaxError as e:
+            line_no = e.lineno or 1
             issues.append(
                 ScriptCheckIssue(
-                    line=e.lineno or 1,
+                    line=line_no,
                     column=e.offset or 1,
                     message=f"Syntax Error: {e.msg}",
                     severity="error",
                     code="SYNTAX",
+                    script_context=get_line_content(line_no),
                 )
             )
             # 語法錯誤通常意味著無法進一步 lint，直接返回
@@ -112,6 +120,7 @@ class ScriptService:
                     message=f"Parse Error: {e!s}",
                     severity="error",
                     code="PARSE",
+                    script_context=get_line_content(1),
                 )
             )
             return issues
@@ -135,22 +144,53 @@ class ScriptService:
                         tmp_path,
                         "--output-format=json",
                         "--select=E,F,W",
+                        "--ignore=E501",  # 忽略行長限制
                     ],
                     capture_output=True,
                     text=True,
                     check=False,  # ruff returns non-zero on violations, so check=False
                 )
 
+                # 允許的內建全域變數
+                allowed_globals = {
+                    "click",
+                    "move",
+                    "press",
+                    "type_text",
+                    "scroll",
+                    "print",
+                    "sleep",
+                    "mouse_position",
+                    "key_down",
+                    "key_release",
+                    "mouse_down",
+                    "mouse_release",
+                }
+
                 if result.stdout:
                     ruff_violations = json.loads(result.stdout)
                     for v in ruff_violations:
+                        # 過濾 F821 (Undefined name) 針對內建函數的報錯
+                        if v["code"] == "F821":
+                            # message 格式通常為: Undefined name `move`
+                            msg = v["message"]
+                            is_allowed = False
+                            for func_name in allowed_globals:
+                                if f"`{func_name}`" in msg:
+                                    is_allowed = True
+                                    break
+                            if is_allowed:
+                                continue
+
+                        row = v["location"]["row"]
                         issues.append(
                             ScriptCheckIssue(
-                                line=v["location"]["row"],
+                                line=row,
                                 column=v["location"]["column"],
                                 message=v["message"],
-                                severity="error",  # Ruff violations are usually errors or warnings, simpler to map to error for now unless we parse severity
+                                severity="error",
                                 code=v["code"],
+                                script_context=get_line_content(row),
                             )
                         )
 

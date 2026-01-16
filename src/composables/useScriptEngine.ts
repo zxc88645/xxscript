@@ -8,11 +8,13 @@ export function useScriptEngine() {
   const status = ref<EngineStatus>('IDLE');
   const currentScriptId = ref<string | null>(null);
   const currentScriptName = ref<string | null>(null);
+  const currentLine = ref<number | null>(null);
   const loading = ref(false);
 
   const consoleStore = useConsoleStore();
 
-  let pollTimer: number | null = null;
+  let pollTimeout: number | null = null;
+  let isActive = false;
 
   const fetchStatus = async () => {
     try {
@@ -20,29 +22,43 @@ export function useScriptEngine() {
       status.value = response.data.status;
       currentScriptId.value = response.data.script_id;
       currentScriptName.value = response.data.script_name;
+      currentLine.value = response.data.current_line;
     } catch (e) {
       console.error('Failed to fetch engine status', e);
     }
   };
 
+  const poll = async () => {
+    if (!isActive) return;
+
+    await fetchStatus();
+
+    // 如果正在運行，加快輪詢頻率以更新行號
+    const interval = status.value === 'RUNNING' ? 200 : 1000;
+    pollTimeout = window.setTimeout(poll, interval);
+  };
+
   const startPolling = () => {
-    if (pollTimer) return;
-    fetchStatus(); // immediate check
-    pollTimer = setInterval(fetchStatus, 1000) as unknown as number;
+    if (isActive) return;
+    isActive = true;
+    poll();
   };
 
   const stopPolling = () => {
-    if (pollTimer) {
-      clearInterval(pollTimer);
-      pollTimer = null;
+    isActive = false;
+    if (pollTimeout) {
+      clearTimeout(pollTimeout);
+      pollTimeout = null;
     }
   };
 
   const executeScript = async (id: string, name: string) => {
     try {
       loading.value = true;
+      currentLine.value = 0;
       await scriptApi.executeScript(id);
       consoleStore.info(`開始執行: ${name}`, 'Runtime');
+      // 立即更新一次狀態
       await fetchStatus();
     } catch (err) {
       const errorObj = err as Error;
@@ -95,6 +111,7 @@ export function useScriptEngine() {
     status,
     currentScriptId,
     currentScriptName,
+    currentLine,
     loading,
     executeScript,
     stopEngine,

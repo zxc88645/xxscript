@@ -79,6 +79,7 @@ export const scriptApi = {
       status: 'IDLE' | 'RUNNING' | 'PAUSED';
       script_id: string | null;
       script_name: string | null;
+      current_line: number | null;
     }>('/engine/status'),
   stopEngine: () => api.post<{ status: string; message: string }>('/engine/stop'),
   pauseEngine: () => api.post<{ status: string; message: string }>('/engine/pause'),

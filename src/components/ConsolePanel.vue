@@ -156,6 +156,12 @@
                   {{ issue.code }}
                 </span>
               </p>
+              <p
+                v-if="issue.script_context"
+                class="mt-1 font-mono text-xs text-text-muted/70 bg-black/20 px-2 py-1 rounded w-fit"
+              >
+                {{ issue.script_context }}
+              </p>
             </div>
           </div>
         </div>

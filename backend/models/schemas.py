@@ -95,6 +95,7 @@ class ScriptCheckIssue(BaseModel):
     message: str
     severity: Literal["error", "warning", "info", "hint"]
     code: str | None = None
+    script_context: str | None = None
 
 
 class ScriptCheckResponse(BaseModel):
@@ -109,6 +110,7 @@ class EngineStatus(BaseModel):
     status: Literal["IDLE", "RUNNING", "PAUSED"]
     script_id: str | None = None
     script_name: str | None = None
+    current_line: int | None = None
 
 
 class EngineCommandResponse(BaseModel):

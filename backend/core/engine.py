@@ -33,6 +33,7 @@ class ScriptEngine:
         self.status = "IDLE"  # IDLE, RUNNING, PAUSED
         self.current_script_id = None
         self.current_script_name = None
+        self.current_line = 0
 
     def execute(
         self, script_content: str, script_id: str = "manual", script_name: str = "手動執行"
@@ -46,6 +47,7 @@ class ScriptEngine:
         self.status = "RUNNING"
         self.current_script_id = script_id
         self.current_script_name = script_name
+        self.current_line = 0  # 重置行號
         self._stop_event.clear()
         self._pause_event.set()
 
@@ -70,15 +72,16 @@ class ScriptEngine:
                 "mouse_release": self.mouse_release,
             }
 
-            # 追蹤函數，用於實現停止和暫停 (每一行代碼執行前都會調用)
-            def trace_func(frame, event, arg):
-                if self._stop_event.is_set():
-                    raise ScriptStoppedError()
-                self._pause_event.wait()  # 如果暫停，這裡會阻塞
-                return trace_func
+            # 移除 settrace 以避免效能問題和潛在的死鎖
+            # 依賴 API 函數內的 _check_state 來處理停止和暫停
+            # def trace_func(frame, event, arg):
+            #     if self._stop_event.is_set():
+            #         raise ScriptStoppedError()
+            #     self._pause_event.wait()  # 如果暫停，這裡會阻塞
+            #     return trace_func
 
             try:
-                sys.settrace(trace_func)
+                # sys.settrace(trace_func)
                 exec(script_content, safe_globals)
             except ScriptStoppedError:
                 status = "stopped"
@@ -88,9 +91,10 @@ class ScriptEngine:
                 error_msg = str(e)
                 print(f"腳本執行錯誤: {e}")
             finally:
-                sys.settrace(None)
+                # sys.settrace(None)
                 self.status = "IDLE"
                 self.current_script_id = None
+                self.current_line = 0
 
                 # 記錄執行歷史
                 duration = time.time() - start_time
@@ -135,6 +139,7 @@ class ScriptEngine:
             "status": self.status,
             "script_id": self.current_script_id,
             "script_name": self.current_script_name,
+            "current_line": self.current_line,
         }
 
     def _add_history(self, script_id: str, status: str, duration: float, error: str | None = None):
@@ -177,6 +182,18 @@ class ScriptEngine:
         if self.history_file.exists():
             self.history_file.unlink()
 
+    def _update_line(self):
+        """更新當前行號"""
+        try:
+            # frame 0: _update_line
+            # frame 1: API method (e.g. sleep)
+            # frame 2: script content
+            frame = sys._getframe(2)
+            self.current_line = frame.f_lineno
+            print(f"執行行號: {self.current_line}")
+        except Exception:
+            pass
+
     def _check_state(self):
         """手動檢查狀態 (用於 API 函數內部)"""
         if self._stop_event.is_set():
@@ -185,6 +202,7 @@ class ScriptEngine:
 
     def sleep(self, seconds: float):
         """可中斷的睡眠"""
+        self._update_line()
         start = time.time()
         while time.time() - start < seconds:
             self._check_state()
@@ -197,6 +215,7 @@ class ScriptEngine:
     def click(self, button="left", count=1):
         """點擊滑鼠"""
         self._check_state()
+        self._update_line()
         btn = Button.left if button == "left" else Button.right
         for _ in range(count):
             self._check_state()
@@ -205,16 +224,19 @@ class ScriptEngine:
     def move(self, x: int, y: int):
         """移動滑鼠到絕對位置"""
         self._check_state()
+        self._update_line()
         self.mouse.position = (x, y)
 
     def scroll(self, dx: int, dy: int):
         """滾動滑鼠滾輪"""
         self._check_state()
+        self._update_line()
         self.mouse.scroll(dx, dy)
 
     def press(self, key: str, duration: float = 0.05):
         """按下鍵盤按鍵 (包含按下、延遲、釋放)"""
         self._check_state()
+        self._update_line()
         try:
             # 嘗試特殊鍵
             special_key = getattr(Key, key.lower(), None)
@@ -233,6 +255,7 @@ class ScriptEngine:
     def type_text(self, text: str):
         """輸入文字"""
         self._check_state()
+        self._update_line()
         self.keyboard.type(text)
 
     def get_mouse_position(self):
@@ -244,6 +267,7 @@ class ScriptEngine:
     def key_down(self, key: str):
         """按下鍵盤按鍵 (不釋放)"""
         self._check_state()
+        self._update_line()
         try:
             special_key = getattr(Key, key.lower(), None)
             if special_key:
@@ -256,6 +280,7 @@ class ScriptEngine:
     def key_release(self, key: str):
         """釋放鍵盤按鍵"""
         self._check_state()
+        self._update_line()
         try:
             special_key = getattr(Key, key.lower(), None)
             if special_key:
@@ -268,11 +293,13 @@ class ScriptEngine:
     def mouse_down(self, button="left"):
         """按下滑鼠按鈕 (不釋放)"""
         self._check_state()
+        self._update_line()
         btn = Button.left if button == "left" else Button.right
         self.mouse.press(btn)
 
     def mouse_release(self, button="left"):
         """釋放滑鼠按鈕"""
         self._check_state()
+        self._update_line()
         btn = Button.left if button == "left" else Button.right
         self.mouse.release(btn)

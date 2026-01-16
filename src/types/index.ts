@@ -60,6 +60,7 @@ export interface ScriptCheckIssue {
   message: string;
   severity: 'error' | 'warning' | 'info' | 'hint';
   code?: string;
+  script_context?: string;
 }
 
 export interface ScriptCheckResponse {
