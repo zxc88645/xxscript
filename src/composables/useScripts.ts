@@ -7,6 +7,7 @@ import { scriptApi } from '../services/api';
 import type { Script, ScriptCreate, ScriptUpdate } from '../types';
 import { useToast } from './useToast';
 import { useConfirm } from './useConfirm';
+import { useConsoleStore } from '../stores/console';
 
 export function useScripts() {
   const scripts = ref<Script[]>([]);
@@ -15,6 +16,7 @@ export function useScripts() {
   const error = ref<string | null>(null);
   const toast = useToast();
   const { confirm } = useConfirm();
+  const consoleStore = useConsoleStore();
 
   /**
    * 載入所有腳本
@@ -144,11 +146,13 @@ export function useScripts() {
   const executeScript = async (id: string) => {
     try {
       const response = await scriptApi.executeScript(id);
-      toast.success(`執行完成: ${response.data.message}`);
+      consoleStore.success(`執行完成: ${response.data.message}`, 'Runtime');
+      // toast.success(`執行完成: ${response.data.message}`); // 選擇性保留 Toast，或者只用 Console
     } catch (err) {
+      const errorObj = err as Error;
       error.value = '執行腳本失敗';
-      console.error('執行腳本失敗:', err);
-      toast.error('執行腳本失敗');
+      console.error('執行腳本失敗:', errorObj);
+      consoleStore.error(`執行失敗: ${errorObj.message || '未知錯誤'}`, 'Runtime');
     }
   };
 
@@ -164,10 +168,13 @@ export function useScripts() {
     if (!selectedScript.value) return [];
     try {
       const response = await scriptApi.checkScript(selectedScript.value.content);
-      return response.data.issues;
+      const issues = response.data.issues;
+      consoleStore.setProblems(issues);
+      return issues;
     } catch (err) {
-      console.error('檢查腳本失敗:', err);
-      toast.error('檢查腳本失敗');
+      const errorObj = err as Error;
+      console.error('檢查腳本失敗:', errorObj);
+      consoleStore.error(`檢查失敗: ${errorObj.message || '未知錯誤'}`, 'Linter');
       return [];
     }
   };

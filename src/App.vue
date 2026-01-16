@@ -180,16 +180,6 @@
                 <!-- 編輯器區域 -->
                 <div class="space-y-4">
                   <div class="flex items-center justify-between">
-                    <div class="flex items-center gap-3">
-                      <label class="text-sm font-medium text-text-muted">程式碼邏輯 (Python)</label>
-                      <button
-                        @click="handleCheckCode"
-                        class="px-2 py-1 text-xs bg-bg-surface border border-border-base hover:bg-bg-surface/80 rounded transition-colors flex items-center gap-1 text-text-muted hover:text-primary"
-                        title="檢查代碼錯誤"
-                      >
-                        <span>🔍</span> 檢查
-                      </button>
-                    </div>
                     <QuickInsertBar
                       @insert="insertCode"
                       @insert-click="showClickModal = true"
@@ -205,10 +195,17 @@
                         :theme="themeStore.isDarkMode ? 'vs-dark' : 'vs'"
                         :options="MONACO_EDITOR_OPTIONS"
                         @mount="handleMount"
-                        @change="saveCurrentScript"
+                        @change="handleChange"
                       />
                     </div>
                   </div>
+                </div>
+
+                <!-- 控制台面板 -->
+                <div
+                  class="h-48 mt-4 border border-border-base rounded-2xl overflow-hidden shadow-sm"
+                >
+                  <ConsolePanel @jump="handleJumpToIssue" />
                 </div>
               </div>
 
@@ -259,12 +256,13 @@ import KeyCaptureModal from './components/KeyCaptureModal.vue';
 import PositionCapture from './components/PositionCapture.vue';
 import ToastContainer from './components/common/ToastContainer.vue';
 import ConfirmModal from './components/common/ConfirmModal.vue';
+import ConsolePanel from './components/ConsolePanel.vue';
 
 // Stores
 import { useThemeStore } from './stores/theme';
-import { useToast } from './composables/useToast';
+import { debounce } from 'lodash-es';
+import type { ScriptCheckIssue } from './types';
 const themeStore = useThemeStore();
-const toast = useToast();
 
 // Composables
 import { useScripts } from './composables/useScripts';
@@ -324,27 +322,38 @@ const { captureHotkey, startCapture, stopCapture } = useHotkeyCapture(
   saveCurrentScript,
 );
 
-const handleCheckCode = async () => {
+// 防抖的檢查函數
+const debouncedCheck = debounce(async () => {
+  if (!editorRef.value || !selectedScript.value) return;
+
   const issues = await checkCurrentScript();
-  if (editorRef.value) {
-    const model = editorRef.value.getModel();
-    if (model) {
-      const markers = issues.map((issue) => ({
-        severity:
-          issue.severity === 'error' ? monaco.MarkerSeverity.Error : monaco.MarkerSeverity.Warning,
-        message: issue.message,
-        startLineNumber: issue.line,
-        startColumn: issue.column,
-        endLineNumber: issue.line,
-        endColumn: issue.column + 1, // 簡單處理，標記一個字符
-      }));
-      monaco.editor.setModelMarkers(model, 'owner', markers);
-    }
+  const model = editorRef.value.getModel();
+
+  if (model) {
+    const markers = issues.map((issue) => ({
+      severity:
+        issue.severity === 'error' ? monaco.MarkerSeverity.Error : monaco.MarkerSeverity.Warning,
+      message: issue.message,
+      startLineNumber: issue.line,
+      startColumn: issue.column,
+      endLineNumber: issue.line,
+      endColumn: issue.column + 1,
+    }));
+    monaco.editor.setModelMarkers(model, 'owner', markers);
   }
-  if (issues.length === 0) {
-    toast.success('檢查通過！代碼看起來沒問題');
-  } else {
-    toast.warning(`發現 ${issues.length} 個潛在問題`);
+}, 1000); // 1秒後檢查
+
+// 監聽內容變化自動檢查
+const handleChange = () => {
+  saveCurrentScript();
+  debouncedCheck();
+};
+
+const handleJumpToIssue = (issue: ScriptCheckIssue) => {
+  if (editorRef.value) {
+    editorRef.value.revealPositionInCenter({ lineNumber: issue.line, column: issue.column });
+    editorRef.value.setPosition({ lineNumber: issue.line, column: issue.column });
+    editorRef.value.focus();
   }
 };
 </script>
