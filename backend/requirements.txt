@@ -1,4 +1,9 @@
+# 執行時依賴
 fastapi
 uvicorn
 pynput
 websockets
+
+# 開發依賴（linting & formatting）
+ruff
+mypy

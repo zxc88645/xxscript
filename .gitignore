@@ -34,3 +34,18 @@ coverage
 
 # Vitest
 __screenshots__/
+
+# Python
+__pycache__/
+*.py[cod]
+*$py.class
+*.so
+.Python
+venv/
+.venv/
+ENV/
+env/
+.ruff_cache/
+.mypy_cache/
+.pytest_cache/
+*.egg-info/

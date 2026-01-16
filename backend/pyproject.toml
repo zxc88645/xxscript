@@ -1,0 +1,65 @@
+[tool.ruff]
+# 目標 Python 版本
+target-version = "py311"
+
+# 每行最大字元數
+line-length = 100
+
+# 要檢查的檔案
+include = ["*.py", "*.pyi"]
+
+# 排除的目錄
+exclude = [
+    ".git",
+    ".venv",
+    "venv",
+    "__pycache__",
+    "*.pyc",
+]
+
+[tool.ruff.lint]
+# 啟用的規則集
+select = [
+    "E",      # pycodestyle errors
+    "W",      # pycodestyle warnings
+    "F",      # pyflakes
+    "I",      # isort (import 排序)
+    "N",      # pep8-naming
+    "UP",     # pyupgrade
+    "B",      # flake8-bugbear
+    "C4",     # flake8-comprehensions
+    "SIM",    # flake8-simplify
+    "TCH",    # flake8-type-checking
+    "PTH",    # flake8-use-pathlib
+    "RUF",    # Ruff-specific rules
+]
+
+# 忽略的規則
+ignore = [
+    "E501",   # 行長度由 formatter 處理
+    "B008",   # 允許在函數參數中使用函數調用（FastAPI 依賴注入需要）
+]
+
+# 每個檔案允許的未使用變數
+[tool.ruff.lint.per-file-ignores]
+"__init__.py" = ["F401"]  # 允許未使用的 import
+
+[tool.ruff.lint.isort]
+# import 排序設定
+known-first-party = ["api", "config", "core", "models", "repositories", "services"]
+section-order = ["future", "standard-library", "third-party", "first-party", "local-folder"]
+
+[tool.ruff.format]
+# 格式化設定
+quote-style = "double"
+indent-style = "space"
+line-ending = "auto"
+
+[tool.mypy]
+# mypy 類型檢查設定
+python_version = "3.11"
+warn_return_any = true
+warn_unused_configs = true
+disallow_untyped_defs = false  # 暫時關閉，可以逐步啟用
+ignore_missing_imports = true
+check_untyped_defs = true
