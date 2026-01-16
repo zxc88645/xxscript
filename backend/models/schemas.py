@@ -101,3 +101,18 @@ class ScriptCheckResponse(BaseModel):
     """代碼檢查響應"""
 
     issues: list[ScriptCheckIssue]
+
+
+class EngineStatus(BaseModel):
+    """引擎狀態模型"""
+
+    status: Literal["IDLE", "RUNNING", "PAUSED"]
+    script_id: str | None = None
+    script_name: str | None = None
+
+
+class EngineCommandResponse(BaseModel):
+    """引擎控制指令響應"""
+
+    status: str
+    message: str

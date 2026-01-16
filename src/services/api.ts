@@ -73,6 +73,17 @@ export const scriptApi = {
   // 滑鼠位置 API
   getMousePosition: () => api.get<{ x: number; y: number }>('/mouse/position'),
 
+  // 引擎控制 API
+  getEngineStatus: () =>
+    api.get<{
+      status: 'IDLE' | 'RUNNING' | 'PAUSED';
+      script_id: string | null;
+      script_name: string | null;
+    }>('/engine/status'),
+  stopEngine: () => api.post<{ status: string; message: string }>('/engine/stop'),
+  pauseEngine: () => api.post<{ status: string; message: string }>('/engine/pause'),
+  resumeEngine: () => api.post<{ status: string; message: string }>('/engine/resume'),
+
   // 檢查腳本
   checkScript: (content: string) =>
     api.post<{ issues: ScriptCheckIssue[] }>('/scripts/check', { content }),

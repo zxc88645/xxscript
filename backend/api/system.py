@@ -11,7 +11,14 @@ from fastapi import APIRouter, HTTPException, WebSocket, WebSocketDisconnect
 from core.engine import ScriptEngine
 from core.key_listener import KeyListener
 from core.recorder import ScriptRecorder
-from models.schemas import ExecutionResult, MousePosition, RecorderStatus, StatusResponse
+from models.schemas import (
+    EngineCommandResponse,
+    EngineStatus,
+    ExecutionResult,
+    MousePosition,
+    RecorderStatus,
+    StatusResponse,
+)
 from repositories.script_repository import ScriptRepository
 from services.history_service import HistoryService
 from services.script_service import ScriptService
@@ -93,8 +100,32 @@ def execute_script(script_id: str):
     if not script:
         raise HTTPException(status_code=404, detail="腳本不存在")
 
-    result = script_engine.execute(script.content, script_id)
+    result = script_engine.execute(script.content, script_id, script.name)
     return ExecutionResult(**result)
+
+
+@router.post("/engine/stop", response_model=EngineCommandResponse)
+def stop_execution():
+    """停止執行腳本"""
+    return script_engine.stop()
+
+
+@router.post("/engine/pause", response_model=EngineCommandResponse)
+def pause_execution():
+    """暫停執行腳本"""
+    return script_engine.pause()
+
+
+@router.post("/engine/resume", response_model=EngineCommandResponse)
+def resume_execution():
+    """恢復執行腳本"""
+    return script_engine.resume()
+
+
+@router.get("/engine/status", response_model=EngineStatus)
+def get_engine_status():
+    """取得引擎狀態"""
+    return script_engine.get_status()
 
 
 @router.post("/recorder/start")

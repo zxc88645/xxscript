@@ -147,13 +147,54 @@
                     </button>
                   </div>
 
+                  <!-- 執行控制區 -->
                   <div class="flex items-center gap-2">
+                    <!-- 閒置狀態 -->
                     <button
-                      @click="executeScript(selectedScript.id)"
+                      v-if="engineStatus === 'IDLE'"
+                      @click="handleExecute"
                       class="px-4 py-2 bg-primary/10 text-primary border border-primary/20 hover:bg-primary/20 rounded-xl font-medium transition-all flex items-center gap-2"
+                      :disabled="engineLoading"
                     >
-                      <span>▶️</span> 快速模擬
+                      <span v-if="engineLoading" class="animate-spin">⌛</span>
+                      <span v-else>▶️</span>
+                      快速模擬
                     </button>
+
+                    <!-- 執行中狀態 -->
+                    <template v-if="engineStatus === 'RUNNING'">
+                      <button
+                        @click="pauseEngine"
+                        class="px-4 py-2 bg-yellow-500/10 text-yellow-600 border border-yellow-500/20 hover:bg-yellow-500/20 rounded-xl font-medium transition-all flex items-center gap-2"
+                      >
+                        <span>⏸️</span> 暫停
+                      </button>
+                      <button
+                        @click="stopEngine"
+                        class="px-4 py-2 bg-red-500/10 text-red-600 border border-red-500/20 hover:bg-red-500/20 rounded-xl font-medium transition-all flex items-center gap-2"
+                      >
+                        <span>⏹️</span> 停止
+                      </button>
+                    </template>
+
+                    <!-- 暫停狀態 -->
+                    <template v-if="engineStatus === 'PAUSED'">
+                      <button
+                        @click="resumeEngine"
+                        class="px-4 py-2 bg-green-500/10 text-green-600 border border-green-500/20 hover:bg-green-500/20 rounded-xl font-medium transition-all flex items-center gap-2"
+                      >
+                        <span>▶️</span> 繼續
+                      </button>
+                      <button
+                        @click="stopEngine"
+                        class="px-4 py-2 bg-red-500/10 text-red-600 border border-red-500/20 hover:bg-red-500/20 rounded-xl font-medium transition-all flex items-center gap-2"
+                      >
+                        <span>⏹️</span> 停止
+                      </button>
+                    </template>
+
+                    <div class="h-6 w-[1px] bg-border-base mx-2"></div>
+
                     <button
                       @click="deleteScript(selectedScript.id)"
                       class="p-2 text-red-400 hover:text-red-500 hover:bg-red-50 rounded-lg transition-colors"
@@ -270,6 +311,7 @@ import { useKeyListener } from './composables/useKeyListener';
 import { useRecorder } from './composables/useRecorder';
 import { useCodeInsertion } from './composables/useCodeInsertion';
 import { useHotkeyCapture } from './composables/useHotkeyCapture';
+import { useScriptEngine } from './composables/useScriptEngine';
 
 // Monaco Editor 配置
 const MONACO_EDITOR_OPTIONS = {
@@ -297,9 +339,23 @@ const {
   saveCurrentScript,
   deleteScript,
   toggleScriptEnabled,
-  executeScript,
   checkCurrentScript,
 } = useScripts();
+
+const {
+  status: engineStatus,
+  loading: engineLoading,
+  executeScript: runScriptEngine,
+  stopEngine,
+  pauseEngine,
+  resumeEngine,
+} = useScriptEngine();
+
+const handleExecute = () => {
+  if (selectedScript.value) {
+    runScriptEngine(selectedScript.value.id, selectedScript.value.name);
+  }
+};
 
 const { listenerRunning, toggleListener } = useKeyListener();
 
