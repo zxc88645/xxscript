@@ -1,10 +1,10 @@
 [
   {
     "id": "script_8",
-    "name": "新腳本",
-    "content": "# 在此輸入腳本內容\nmove(200, 200)\nsleep(1.0)\nmove(200, 200)\nsleep(1.0)\nmove(200, 200)\nsleep(1.0)\nmove(200, 200)\nsleep(1.0)\nsleep(1.0)\nsleep(1.0)\nmove(200, 200)\n\nmouse_down('left')\nsleep(0.05)\nmouse_release('left')\n\nkey_down('1')\nsleep(0.05)\nkey_release('1')\n\n",
-    "hotkey": "",
-    "enabled": false
+    "name": "qwe",
+    "content": "scroll(0, -10)\nsleep(0.005)\n\nscroll(0, -10)\n# 在此輸入腳本內容\nmove(200, 200)\n",
+    "hotkey": "e",
+    "enabled": true
   },
   {
     "name": "新腳本",

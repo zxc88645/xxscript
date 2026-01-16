@@ -54,5 +54,579 @@
     "status": "stopped",
     "duration": 5.004,
     "error": null
+  },
+  {
+    "script_id": "script_8",
+    "timestamp": "2026-01-16T16:50:44.746534",
+    "status": "success",
+    "duration": 6.11,
+    "error": null
+  },
+  {
+    "script_id": "script_8",
+    "timestamp": "2026-01-16T16:50:59.566586",
+    "status": "stopped",
+    "duration": 4.204,
+    "error": null
+  },
+  {
+    "script_id": "hotkey",
+    "timestamp": "2026-01-16T16:53:07.626496",
+    "status": "success",
+    "duration": 5.004,
+    "error": null
+  },
+  {
+    "script_id": "hotkey",
+    "timestamp": "2026-01-16T16:55:59.759981",
+    "status": "success",
+    "duration": 5.003,
+    "error": null
+  },
+  {
+    "script_id": "hotkey",
+    "timestamp": "2026-01-16T16:56:28.368021",
+    "status": "success",
+    "duration": 5.004,
+    "error": null
+  },
+  {
+    "script_id": "hotkey",
+    "timestamp": "2026-01-16T16:58:16.466293",
+    "status": "success",
+    "duration": 5.004,
+    "error": null
+  },
+  {
+    "script_id": "hotkey",
+    "timestamp": "2026-01-16T16:58:28.728535",
+    "status": "success",
+    "duration": 5.004,
+    "error": null
+  },
+  {
+    "script_id": "hotkey",
+    "timestamp": "2026-01-16T16:58:31.118266",
+    "status": "success",
+    "duration": 0.001,
+    "error": null
+  },
+  {
+    "script_id": "hotkey",
+    "timestamp": "2026-01-16T16:58:51.772259",
+    "status": "success",
+    "duration": 0.0,
+    "error": null
+  },
+  {
+    "script_id": "hotkey",
+    "timestamp": "2026-01-16T16:58:57.090687",
+    "status": "success",
+    "duration": 0.0,
+    "error": null
+  },
+  {
+    "script_id": "hotkey",
+    "timestamp": "2026-01-16T16:59:00.591395",
+    "status": "success",
+    "duration": 0.001,
+    "error": null
+  },
+  {
+    "script_id": "hotkey",
+    "timestamp": "2026-01-16T17:03:31.106997",
+    "status": "success",
+    "duration": 0.001,
+    "error": null
+  },
+  {
+    "script_id": "hotkey",
+    "timestamp": "2026-01-16T17:03:31.135980",
+    "status": "success",
+    "duration": 0.0,
+    "error": null
+  },
+  {
+    "script_id": "hotkey",
+    "timestamp": "2026-01-16T17:03:31.180419",
+    "status": "success",
+    "duration": 0.0,
+    "error": null
+  },
+  {
+    "script_id": "hotkey",
+    "timestamp": "2026-01-16T17:03:31.211230",
+    "status": "success",
+    "duration": 0.0,
+    "error": null
+  },
+  {
+    "script_id": "hotkey",
+    "timestamp": "2026-01-16T17:03:31.245607",
+    "status": "success",
+    "duration": 0.0,
+    "error": null
+  },
+  {
+    "script_id": "hotkey",
+    "timestamp": "2026-01-16T17:03:31.278983",
+    "status": "success",
+    "duration": 0.0,
+    "error": null
+  },
+  {
+    "script_id": "hotkey",
+    "timestamp": "2026-01-16T17:03:31.309394",
+    "status": "success",
+    "duration": 0.0,
+    "error": null
+  },
+  {
+    "script_id": "hotkey",
+    "timestamp": "2026-01-16T17:03:31.341598",
+    "status": "success",
+    "duration": 0.0,
+    "error": null
+  },
+  {
+    "script_id": "hotkey",
+    "timestamp": "2026-01-16T17:04:43.071312",
+    "status": "success",
+    "duration": 0.0,
+    "error": null
+  },
+  {
+    "script_id": "hotkey",
+    "timestamp": "2026-01-16T17:30:11.655042",
+    "status": "success",
+    "duration": 0.001,
+    "error": null
+  },
+  {
+    "script_id": "hotkey",
+    "timestamp": "2026-01-16T17:30:13.081496",
+    "status": "success",
+    "duration": 0.001,
+    "error": null
+  },
+  {
+    "script_id": "hotkey",
+    "timestamp": "2026-01-16T17:30:24.521010",
+    "status": "success",
+    "duration": 0.002,
+    "error": null
+  },
+  {
+    "script_id": "hotkey",
+    "timestamp": "2026-01-16T17:30:39.169832",
+    "status": "success",
+    "duration": 0.001,
+    "error": null
+  },
+  {
+    "script_id": "hotkey",
+    "timestamp": "2026-01-16T17:30:48.187000",
+    "status": "success",
+    "duration": 0.001,
+    "error": null
+  },
+  {
+    "script_id": "hotkey",
+    "timestamp": "2026-01-16T17:30:49.403988",
+    "status": "success",
+    "duration": 0.001,
+    "error": null
+  },
+  {
+    "script_id": "hotkey",
+    "timestamp": "2026-01-16T17:30:49.705351",
+    "status": "success",
+    "duration": 0.001,
+    "error": null
+  },
+  {
+    "script_id": "hotkey",
+    "timestamp": "2026-01-16T17:30:50.252939",
+    "status": "success",
+    "duration": 0.001,
+    "error": null
+  },
+  {
+    "script_id": "hotkey",
+    "timestamp": "2026-01-16T17:30:50.766653",
+    "status": "success",
+    "duration": 0.001,
+    "error": null
+  },
+  {
+    "script_id": "hotkey",
+    "timestamp": "2026-01-16T17:30:50.795893",
+    "status": "success",
+    "duration": 0.001,
+    "error": null
+  },
+  {
+    "script_id": "hotkey",
+    "timestamp": "2026-01-16T17:30:50.826405",
+    "status": "success",
+    "duration": 0.001,
+    "error": null
+  },
+  {
+    "script_id": "hotkey",
+    "timestamp": "2026-01-16T17:30:50.858806",
+    "status": "success",
+    "duration": 0.001,
+    "error": null
+  },
+  {
+    "script_id": "hotkey",
+    "timestamp": "2026-01-16T17:30:50.888545",
+    "status": "success",
+    "duration": 0.001,
+    "error": null
+  },
+  {
+    "script_id": "hotkey",
+    "timestamp": "2026-01-16T17:30:50.922176",
+    "status": "success",
+    "duration": 0.001,
+    "error": null
+  },
+  {
+    "script_id": "hotkey",
+    "timestamp": "2026-01-16T17:30:50.950913",
+    "status": "success",
+    "duration": 0.001,
+    "error": null
+  },
+  {
+    "script_id": "hotkey",
+    "timestamp": "2026-01-16T17:30:50.997660",
+    "status": "success",
+    "duration": 0.001,
+    "error": null
+  },
+  {
+    "script_id": "hotkey",
+    "timestamp": "2026-01-16T17:30:51.028250",
+    "status": "success",
+    "duration": 0.001,
+    "error": null
+  },
+  {
+    "script_id": "hotkey",
+    "timestamp": "2026-01-16T17:30:51.059301",
+    "status": "success",
+    "duration": 0.001,
+    "error": null
+  },
+  {
+    "script_id": "hotkey",
+    "timestamp": "2026-01-16T17:30:52.139821",
+    "status": "success",
+    "duration": 0.001,
+    "error": null
+  },
+  {
+    "script_id": "hotkey",
+    "timestamp": "2026-01-16T17:30:52.639628",
+    "status": "success",
+    "duration": 0.001,
+    "error": null
+  },
+  {
+    "script_id": "hotkey",
+    "timestamp": "2026-01-16T17:30:52.684687",
+    "status": "success",
+    "duration": 0.001,
+    "error": null
+  },
+  {
+    "script_id": "hotkey",
+    "timestamp": "2026-01-16T17:30:52.716603",
+    "status": "success",
+    "duration": 0.001,
+    "error": null
+  },
+  {
+    "script_id": "hotkey",
+    "timestamp": "2026-01-16T17:30:52.745739",
+    "status": "success",
+    "duration": 0.001,
+    "error": null
+  },
+  {
+    "script_id": "hotkey",
+    "timestamp": "2026-01-16T17:30:52.776983",
+    "status": "success",
+    "duration": 0.001,
+    "error": null
+  },
+  {
+    "script_id": "hotkey",
+    "timestamp": "2026-01-16T17:30:52.808814",
+    "status": "success",
+    "duration": 0.001,
+    "error": null
+  },
+  {
+    "script_id": "hotkey",
+    "timestamp": "2026-01-16T17:30:52.847324",
+    "status": "success",
+    "duration": 0.001,
+    "error": null
+  },
+  {
+    "script_id": "hotkey",
+    "timestamp": "2026-01-16T17:30:52.877743",
+    "status": "success",
+    "duration": 0.001,
+    "error": null
+  },
+  {
+    "script_id": "hotkey",
+    "timestamp": "2026-01-16T17:30:52.916940",
+    "status": "success",
+    "duration": 0.001,
+    "error": null
+  },
+  {
+    "script_id": "hotkey",
+    "timestamp": "2026-01-16T17:30:52.948690",
+    "status": "success",
+    "duration": 0.001,
+    "error": null
+  },
+  {
+    "script_id": "hotkey",
+    "timestamp": "2026-01-16T17:30:52.980422",
+    "status": "success",
+    "duration": 0.001,
+    "error": null
+  },
+  {
+    "script_id": "hotkey",
+    "timestamp": "2026-01-16T17:30:53.012076",
+    "status": "success",
+    "duration": 0.001,
+    "error": null
+  },
+  {
+    "script_id": "hotkey",
+    "timestamp": "2026-01-16T17:32:40.915185",
+    "status": "success",
+    "duration": 0.001,
+    "error": null
+  },
+  {
+    "script_id": "hotkey",
+    "timestamp": "2026-01-16T17:32:42.425116",
+    "status": "success",
+    "duration": 0.0,
+    "error": null
+  },
+  {
+    "script_id": "hotkey",
+    "timestamp": "2026-01-16T17:32:43.035112",
+    "status": "success",
+    "duration": 0.001,
+    "error": null
+  },
+  {
+    "script_id": "hotkey",
+    "timestamp": "2026-01-16T17:32:58.962543",
+    "status": "success",
+    "duration": 0.001,
+    "error": null
+  },
+  {
+    "script_id": "hotkey",
+    "timestamp": "2026-01-16T17:33:00.231413",
+    "status": "success",
+    "duration": 0.001,
+    "error": null
+  },
+  {
+    "script_id": "hotkey",
+    "timestamp": "2026-01-16T17:33:00.995723",
+    "status": "success",
+    "duration": 0.0,
+    "error": null
+  },
+  {
+    "script_id": "hotkey",
+    "timestamp": "2026-01-16T17:33:01.581021",
+    "status": "success",
+    "duration": 0.001,
+    "error": null
+  },
+  {
+    "script_id": "hotkey",
+    "timestamp": "2026-01-16T17:33:02.005544",
+    "status": "success",
+    "duration": 0.001,
+    "error": null
+  },
+  {
+    "script_id": "hotkey",
+    "timestamp": "2026-01-16T17:33:02.305185",
+    "status": "success",
+    "duration": 0.001,
+    "error": null
+  },
+  {
+    "script_id": "hotkey",
+    "timestamp": "2026-01-16T17:33:02.754996",
+    "status": "success",
+    "duration": 0.002,
+    "error": null
+  },
+  {
+    "script_id": "hotkey",
+    "timestamp": "2026-01-16T17:33:03.265383",
+    "status": "success",
+    "duration": 0.0,
+    "error": null
+  },
+  {
+    "script_id": "hotkey",
+    "timestamp": "2026-01-16T17:33:03.296570",
+    "status": "success",
+    "duration": 0.001,
+    "error": null
+  },
+  {
+    "script_id": "hotkey",
+    "timestamp": "2026-01-16T17:33:03.327147",
+    "status": "success",
+    "duration": 0.001,
+    "error": null
+  },
+  {
+    "script_id": "hotkey",
+    "timestamp": "2026-01-16T17:33:03.907378",
+    "status": "success",
+    "duration": 0.001,
+    "error": null
+  },
+  {
+    "script_id": "hotkey",
+    "timestamp": "2026-01-16T17:33:04.675705",
+    "status": "success",
+    "duration": 0.001,
+    "error": null
+  },
+  {
+    "script_id": "hotkey",
+    "timestamp": "2026-01-16T17:33:05.543851",
+    "status": "success",
+    "duration": 0.002,
+    "error": null
+  },
+  {
+    "script_id": "hotkey",
+    "timestamp": "2026-01-16T17:33:06.240839",
+    "status": "success",
+    "duration": 0.001,
+    "error": null
+  },
+  {
+    "script_id": "script_8",
+    "timestamp": "2026-01-16T17:33:47.002567",
+    "status": "success",
+    "duration": 0.007,
+    "error": null
+  },
+  {
+    "script_id": "hotkey",
+    "timestamp": "2026-01-16T17:33:58.503075",
+    "status": "success",
+    "duration": 0.006,
+    "error": null
+  },
+  {
+    "script_id": "hotkey",
+    "timestamp": "2026-01-16T17:33:59.538896",
+    "status": "success",
+    "duration": 0.006,
+    "error": null
+  },
+  {
+    "script_id": "hotkey",
+    "timestamp": "2026-01-16T17:34:00.023604",
+    "status": "success",
+    "duration": 0.006,
+    "error": null
+  },
+  {
+    "script_id": "hotkey",
+    "timestamp": "2026-01-16T17:34:02.999801",
+    "status": "success",
+    "duration": 0.006,
+    "error": null
+  },
+  {
+    "script_id": "hotkey",
+    "timestamp": "2026-01-16T17:34:06.545176",
+    "status": "success",
+    "duration": 0.006,
+    "error": null
+  },
+  {
+    "script_id": "hotkey",
+    "timestamp": "2026-01-16T17:34:09.935433",
+    "status": "success",
+    "duration": 0.006,
+    "error": null
+  },
+  {
+    "script_id": "hotkey",
+    "timestamp": "2026-01-16T17:34:14.692938",
+    "status": "success",
+    "duration": 0.006,
+    "error": null
+  },
+  {
+    "script_id": "hotkey",
+    "timestamp": "2026-01-16T17:34:21.281387",
+    "status": "success",
+    "duration": 1.007,
+    "error": null
+  },
+  {
+    "script_id": "hotkey",
+    "timestamp": "2026-01-16T17:36:35.689017",
+    "status": "success",
+    "duration": 0.006,
+    "error": null
+  },
+  {
+    "script_id": "hotkey",
+    "timestamp": "2026-01-16T17:36:36.348557",
+    "status": "success",
+    "duration": 0.006,
+    "error": null
+  },
+  {
+    "script_id": "hotkey",
+    "timestamp": "2026-01-16T17:36:54.132207",
+    "status": "success",
+    "duration": 0.006,
+    "error": null
+  },
+  {
+    "script_id": "hotkey",
+    "timestamp": "2026-01-16T17:36:55.575278",
+    "status": "success",
+    "duration": 0.006,
+    "error": null
+  },
+  {
+    "script_id": "hotkey",
+    "timestamp": "2026-01-16T17:37:27.437814",
+    "status": "success",
+    "duration": 0.006,
+    "error": null
   }
 ]
