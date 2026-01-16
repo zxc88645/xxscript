@@ -11,8 +11,9 @@ from pynput import keyboard
 
 
 class KeyListener:
-    def __init__(self, on_trigger: Callable):
+    def __init__(self, on_trigger: Callable, on_f2: Callable | None = None):
         self.on_trigger = on_trigger
+        self.on_f2 = on_f2
         self.hotkeys: dict[str, dict] = {}  # {key_combo: {script_id, script_content}}
         self.listener: keyboard.Listener | None = None
         self.running = False
@@ -66,6 +67,12 @@ class KeyListener:
 
             # 加入已按下的按鍵集合
             self.pressed_keys.add(key_str)
+
+            # 處理系統功能鍵 (例如 F2)
+            if key_str == "f2" and self.on_f2:
+                # 在新執行緒中執行回呼，以免阻塞監聽器
+                threading.Thread(target=self.on_f2).start()
+                return
 
             # 取得目前組合鍵
             current_combo = self._get_current_combo()
