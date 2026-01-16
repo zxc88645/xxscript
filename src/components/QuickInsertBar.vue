@@ -39,8 +39,8 @@
 
 <script setup lang="ts">
 const INSERT_ITEMS = [
-  { label: '延遲', icon: '⏱️', code: 'time.sleep(1.0)\n' },
-  { label: '滾動', icon: '↕️', code: 'pyautogui.scroll(-100)\n' },
+  { label: '延遲', icon: '⏱️', code: 'sleep(1.0)\n' },
+  { label: '滾動', icon: '↕️', code: 'scroll(0, -10)\n' },
   { label: '提示', icon: '💡', code: 'print("Hello world")\n' },
 ];
 

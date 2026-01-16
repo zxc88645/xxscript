@@ -195,6 +195,7 @@
                         language="python"
                         :theme="themeStore.isDarkMode ? 'vs-dark' : 'vs'"
                         :options="MONACO_EDITOR_OPTIONS"
+                        @mount="handleMount"
                         @change="saveCurrentScript"
                       />
                     </div>
@@ -236,6 +237,8 @@
 </template>
 
 <script setup lang="ts">
+import { shallowRef } from 'vue';
+import type { editor } from 'monaco-editor';
 import AppSidebar from './components/AppSidebar.vue';
 import ScriptList from './components/ScriptList.vue';
 import QuickInsertBar from './components/QuickInsertBar.vue';
@@ -266,6 +269,11 @@ const MONACO_EDITOR_OPTIONS = {
   parameterHints: { enabled: true },
 };
 
+const editorRef = shallowRef<editor.IStandaloneCodeEditor | null>(null);
+const handleMount = (editor: editor.IStandaloneCodeEditor) => {
+  editorRef.value = editor;
+};
+
 // 使用 Composables
 const {
   scripts,
@@ -292,7 +300,7 @@ const {
   captureMousePosition,
   confirmKey,
   cancelKeyCapture,
-} = useCodeInsertion(selectedScript, saveCurrentScript);
+} = useCodeInsertion(selectedScript, saveCurrentScript, editorRef);
 
 const { captureHotkey, startCapture, stopCapture } = useHotkeyCapture(
   selectedScript,

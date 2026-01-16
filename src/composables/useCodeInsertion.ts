@@ -4,10 +4,12 @@
  */
 import { ref, watch } from 'vue';
 import type { Script } from '../types';
+import type { editor } from 'monaco-editor';
 
 export function useCodeInsertion(
   selectedScript: { value: Script | null },
   saveScript: () => Promise<void>,
+  editorInstance?: { value: editor.IStandaloneCodeEditor | null },
 ) {
   const showClickModal = ref(false);
   const showKeyModal = ref(false);
@@ -18,12 +20,45 @@ export function useCodeInsertion(
    * 插入代碼到當前腳本
    */
   const insertCode = (code: string) => {
-    if (!selectedScript.value) return;
+    if (editorInstance?.value) {
+      const editor = editorInstance.value;
+      const position = editor.getPosition();
+      const selection = editor.getSelection();
 
-    const currentContent = selectedScript.value.content || '';
-    const newContent = currentContent + (currentContent ? '\n' : '') + code;
-    selectedScript.value.content = newContent;
-    saveScript();
+      if (!position) return;
+
+      // 如果有選取範圍則替換，否則在游標處插入
+      const range = selection || {
+        startLineNumber: position.lineNumber,
+        startColumn: position.column,
+        endLineNumber: position.lineNumber,
+        endColumn: position.column,
+      };
+
+      const op = {
+        range: range,
+        text: code,
+        forceMoveMarkers: true,
+      };
+
+      editor.executeEdits('insert-code', [op]);
+      editor.pushUndoStop(); // 添加 Undo 斷點
+      editor.focus();
+
+      // 更新 selectedScript content 並儲存
+      // 雖然 v-model 會更新，但確保狀態同步
+      if (selectedScript.value) {
+        selectedScript.value.content = editor.getValue();
+        saveScript();
+      }
+    } else {
+      // Fallback: 附加到最後
+      if (!selectedScript.value) return;
+      const currentContent = selectedScript.value.content || '';
+      const newContent = currentContent + (currentContent ? '\n' : '') + code;
+      selectedScript.value.content = newContent;
+      saveScript();
+    }
   };
 
   /**
