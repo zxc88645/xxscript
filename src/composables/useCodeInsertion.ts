@@ -3,7 +3,6 @@
  * 處理快速插入代碼、位置捕捉、按鍵捕捉等功能
  */
 import { ref, watch } from 'vue';
-import { scriptApi } from '../services/api';
 import type { Script } from '../types';
 
 export function useCodeInsertion(
@@ -41,40 +40,52 @@ export function useCodeInsertion(
   };
 
   /**
-   * 捕捉滑鼠位置
+   * 捕捉滑鼠位置 (透過後端 WebSocket)
    */
-  const captureMousePosition = async () => {
+  const captureMousePosition = () => {
     capturingPosition.value = true;
+
+    // 建立 WebSocket 連線
+    const wsUrl = `ws://${window.location.hostname}:8000/ws/system`;
+    const socket = new WebSocket(wsUrl);
+
+    const cleanup = () => {
+      capturingPosition.value = false;
+      if (socket.readyState === WebSocket.OPEN) {
+        socket.close();
+      }
+      window.removeEventListener('keydown', handleEscape);
+    };
 
     const handleEscape = (e: KeyboardEvent) => {
       if (e.key === 'Escape') {
-        capturingPosition.value = false;
-        document.removeEventListener('keydown', handleEscape);
+        cleanup();
       }
     };
 
-    const handleClick = async () => {
+    socket.onmessage = (event) => {
       try {
-        // 使用後端 API 獲取真實的滑鼠位置
-        const response = await scriptApi.getMousePosition();
-        const { x, y } = response.data;
-        insertCode(`move(${x}, ${y})`);
-        capturingPosition.value = false;
-        document.removeEventListener('keydown', handleEscape);
-      } catch (error) {
-        console.error('獲取滑鼠位置失敗:', error);
-        alert('獲取滑鼠位置失敗');
-        capturingPosition.value = false;
-        document.removeEventListener('keydown', handleEscape);
+        const message = JSON.parse(event.data);
+        if (message.type === 'coordinate') {
+          const { x, y } = message.data;
+          insertCode(`move(${x}, ${y})`);
+          cleanup(); // 成功獲取後自動關閉
+        }
+      } catch (err) {
+        console.error('解析 WebSocket 訊息失敗:', err);
       }
     };
 
-    document.addEventListener('keydown', handleEscape);
+    socket.onclose = () => {
+      capturingPosition.value = false;
+    };
 
-    // 延遲一點再加上監聽,避免立即觸發
-    setTimeout(() => {
-      document.addEventListener('click', handleClick, { once: true });
-    }, 100);
+    socket.onerror = (err) => {
+      console.error('WebSocket 錯誤:', err);
+      capturingPosition.value = false;
+    };
+
+    window.addEventListener('keydown', handleEscape);
   };
 
   /**
