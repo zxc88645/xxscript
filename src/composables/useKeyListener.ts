@@ -4,10 +4,12 @@
  */
 import { ref, onMounted } from 'vue';
 import { scriptApi } from '../services/api';
+import { useToast } from './useToast';
 
 export function useKeyListener() {
   const listenerRunning = ref(false);
   const loading = ref(false);
+  const toast = useToast();
 
   /**
    * 檢查監聽器狀態
@@ -35,7 +37,7 @@ export function useKeyListener() {
       await checkStatus();
     } catch (err) {
       console.error('切換監聽器失敗:', err);
-      alert('切換監聽器失敗');
+      toast.error('切換監聽器失敗');
     } finally {
       loading.value = false;
     }

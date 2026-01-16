@@ -5,9 +5,11 @@
 import { ref } from 'vue';
 import { scriptApi } from '../services/api';
 import type { Script } from '../types';
+import { useToast } from './useToast';
 
 export function useRecorder(selectedScript: { value: Script | null }) {
   const isRecording = ref(false);
+  const toast = useToast();
 
   /**
    * 開始錄製
@@ -18,7 +20,7 @@ export function useRecorder(selectedScript: { value: Script | null }) {
       isRecording.value = true;
     } catch (err) {
       console.error('開始錄製失敗:', err);
-      alert('開始錄製失敗');
+      toast.error('開始錄製失敗');
     }
   };
 
@@ -36,7 +38,7 @@ export function useRecorder(selectedScript: { value: Script | null }) {
       }
     } catch (err) {
       console.error('停止錄製失敗:', err);
-      alert('停止錄製失敗');
+      toast.error('停止錄製失敗');
       isRecording.value = false;
     }
   };

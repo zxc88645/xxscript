@@ -5,12 +5,16 @@
 import { ref, onMounted } from 'vue';
 import { scriptApi } from '../services/api';
 import type { Script, ScriptCreate, ScriptUpdate } from '../types';
+import { useToast } from './useToast';
+import { useConfirm } from './useConfirm';
 
 export function useScripts() {
   const scripts = ref<Script[]>([]);
   const selectedScript = ref<Script | null>(null);
   const loading = ref(false);
   const error = ref<string | null>(null);
+  const toast = useToast();
+  const { confirm } = useConfirm();
 
   /**
    * 載入所有腳本
@@ -23,6 +27,7 @@ export function useScripts() {
       scripts.value = response.data;
     } catch (err) {
       error.value = '載入腳本失敗';
+      toast.error('載入腳本失敗');
       console.error('載入腳本失敗:', err);
     } finally {
       loading.value = false;
@@ -51,6 +56,7 @@ export function useScripts() {
       selectedScript.value = response.data;
     } catch (err) {
       error.value = '建立腳本失敗';
+      toast.error('建立腳本失敗');
       console.error('建立腳本失敗:', err);
     }
   };
@@ -64,6 +70,7 @@ export function useScripts() {
       await loadScripts();
     } catch (err) {
       error.value = '更新腳本失敗';
+      toast.error('更新腳本失敗');
       console.error('更新腳本失敗:', err);
     }
   };
@@ -84,6 +91,7 @@ export function useScripts() {
       await loadScripts();
     } catch (err) {
       error.value = '儲存腳本失敗';
+      toast.error('儲存腳本失敗');
       console.error('儲存腳本失敗:', err);
     }
   };
@@ -92,7 +100,13 @@ export function useScripts() {
    * 刪除腳本
    */
   const deleteScript = async (id: string) => {
-    if (!confirm('確定要刪除此腳本嗎?')) return;
+    const isConfirmed = await confirm({
+      title: '刪除腳本',
+      message: '確定要刪除此腳本嗎? 此動作無法復原。',
+      confirmText: '刪除',
+      type: 'danger',
+    });
+    if (!isConfirmed) return;
 
     try {
       await scriptApi.deleteScript(id);
@@ -102,6 +116,7 @@ export function useScripts() {
       await loadScripts();
     } catch (err) {
       error.value = '刪除腳本失敗';
+      toast.error('刪除腳本失敗');
       console.error('刪除腳本失敗:', err);
     }
   };
@@ -116,6 +131,7 @@ export function useScripts() {
       await loadScripts();
     } catch (err) {
       error.value = '切換腳本狀態失敗';
+      toast.error('切換腳本狀態失敗');
       console.error('切換腳本狀態失敗:', err);
       // 失敗時回滾
       script.enabled = !script.enabled;
@@ -128,11 +144,11 @@ export function useScripts() {
   const executeScript = async (id: string) => {
     try {
       const response = await scriptApi.executeScript(id);
-      alert(`執行完成: ${response.data.message}`);
+      toast.success(`執行完成: ${response.data.message}`);
     } catch (err) {
       error.value = '執行腳本失敗';
       console.error('執行腳本失敗:', err);
-      alert('執行腳本失敗');
+      toast.error('執行腳本失敗');
     }
   };
 
