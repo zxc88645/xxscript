@@ -233,6 +233,8 @@
       @cancel="cancelKeyCapture"
     />
     <PositionCapture :show="capturingPosition" />
+    <ToastContainer />
+    <ConfirmModal />
   </div>
 </template>
 
@@ -245,6 +247,8 @@ import QuickInsertBar from './components/QuickInsertBar.vue';
 import ClickModal from './components/ClickModal.vue';
 import KeyCaptureModal from './components/KeyCaptureModal.vue';
 import PositionCapture from './components/PositionCapture.vue';
+import ToastContainer from './components/common/ToastContainer.vue';
+import ConfirmModal from './components/common/ConfirmModal.vue';
 
 // Stores
 import { useThemeStore } from './stores/theme';
