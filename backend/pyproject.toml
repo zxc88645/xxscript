@@ -38,6 +38,9 @@ select = [
 ignore = [
     "E501",   # 行長度由 formatter 處理
     "B008",   # 允許在函數參數中使用函數調用（FastAPI 依賴注入需要）
+    "RUF001", # 忽略全形字符檢查
+    "RUF002", # 忽略全形字符檢查 (Docstring)
+    "RUF003", # 忽略全形字符檢查 (Comment)
 ]
 
 # 每個檔案允許的未使用變數

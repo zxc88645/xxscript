@@ -3,7 +3,13 @@
 處理腳本相關的業務邏輯
 """
 
-from models.schemas import Script, ScriptCreate, ScriptUpdate
+import ast
+import json
+import subprocess
+import tempfile
+from pathlib import Path
+
+from models.schemas import Script, ScriptCheckIssue, ScriptCreate, ScriptUpdate
 from repositories.script_repository import ScriptRepository
 
 
@@ -75,3 +81,85 @@ class ScriptService:
     def get_enabled_scripts(self) -> list[Script]:
         """取得所有啟用的腳本"""
         return self.repository.get_enabled_scripts()
+
+    def check_script(self, content: str) -> list[ScriptCheckIssue]:
+        """
+        檢查腳本代碼
+        使用 AST 進行基礎語法檢查，並嘗試使用 ruff 進行 lint
+        """
+        issues = []
+
+        # 1. 基礎 AST 語法檢查
+        try:
+            ast.parse(content)
+        except SyntaxError as e:
+            issues.append(
+                ScriptCheckIssue(
+                    line=e.lineno or 1,
+                    column=e.offset or 1,
+                    message=f"Syntax Error: {e.msg}",
+                    severity="error",
+                    code="SYNTAX",
+                )
+            )
+            # 語法錯誤通常意味著無法進一步 lint，直接返回
+            return issues
+        except Exception as e:
+            issues.append(
+                ScriptCheckIssue(
+                    line=1,
+                    column=1,
+                    message=f"Parse Error: {e!s}",
+                    severity="error",
+                    code="PARSE",
+                )
+            )
+            return issues
+
+        # 2. 使用 Ruff 進行檢查 (如果可用)
+        try:
+            with tempfile.NamedTemporaryFile(
+                mode="w", suffix=".py", delete=False, encoding="utf-8"
+            ) as tmp:
+                tmp.write(content)
+                tmp_path = tmp.name
+
+            try:
+                # 執行 ruff check --output-format=json
+                result = subprocess.run(
+                    [
+                        "python",
+                        "-m",
+                        "ruff",
+                        "check",
+                        tmp_path,
+                        "--output-format=json",
+                        "--select=E,F,W",
+                    ],
+                    capture_output=True,
+                    text=True,
+                    check=False,  # ruff returns non-zero on violations, so check=False
+                )
+
+                if result.stdout:
+                    ruff_violations = json.loads(result.stdout)
+                    for v in ruff_violations:
+                        issues.append(
+                            ScriptCheckIssue(
+                                line=v["location"]["row"],
+                                column=v["location"]["column"],
+                                message=v["message"],
+                                severity="error",  # Ruff violations are usually errors or warnings, simpler to map to error for now unless we parse severity
+                                code=v["code"],
+                            )
+                        )
+
+            finally:
+                Path(tmp_path).unlink(missing_ok=True)
+
+        except Exception as e:
+            print(f"Ruff check failed: {e}")
+            # fall back to AST only if ruff fails
+            pass
+
+        return issues

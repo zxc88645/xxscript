@@ -3,6 +3,8 @@
 使用 Pydantic 進行數據驗證
 """
 
+from typing import Literal
+
 from pydantic import BaseModel, Field
 
 
@@ -77,3 +79,25 @@ class StatusResponse(BaseModel):
     status: str
     message: str
     listener_running: bool
+
+
+class ScriptCheckRequest(BaseModel):
+    """代碼檢查請求"""
+
+    content: str = Field(..., description="待檢查的腳本內容")
+
+
+class ScriptCheckIssue(BaseModel):
+    """代碼檢查問題"""
+
+    line: int
+    column: int
+    message: str
+    severity: Literal["error", "warning", "info", "hint"]
+    code: str | None = None
+
+
+class ScriptCheckResponse(BaseModel):
+    """代碼檢查響應"""
+
+    issues: list[ScriptCheckIssue]

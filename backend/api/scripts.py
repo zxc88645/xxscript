@@ -4,7 +4,13 @@
 
 from fastapi import APIRouter, HTTPException
 
-from models.schemas import Script, ScriptCreate, ScriptUpdate
+from models.schemas import (
+    Script,
+    ScriptCheckRequest,
+    ScriptCheckResponse,
+    ScriptCreate,
+    ScriptUpdate,
+)
 from repositories.script_repository import ScriptRepository
 from services.script_service import ScriptService
 
@@ -25,6 +31,13 @@ def get_scripts():
 def create_script(script: ScriptCreate):
     """建立新腳本"""
     return script_service.create_script(script)
+
+
+@router.post("/check", response_model=ScriptCheckResponse)
+def check_script(request: ScriptCheckRequest):
+    """檢查腳本代碼"""
+    issues = script_service.check_script(request.content)
+    return ScriptCheckResponse(issues=issues)
 
 
 @router.get("/{script_id}", response_model=Script)
