@@ -99,6 +99,7 @@ class ScriptEngine:
                 # 記錄執行歷史
                 duration = time.time() - start_time
                 self._add_history(script_id, status, duration, error_msg)
+                print(f"腳本執行完成執行結束，狀態: {status}，耗時: {duration:.8f} 秒")
 
         self._execution_thread = threading.Thread(target=run_script)
         self._execution_thread.daemon = True
@@ -190,7 +191,7 @@ class ScriptEngine:
             # frame 2: script content
             frame = sys._getframe(2)
             self.current_line = frame.f_lineno
-            print(f"執行行號: {self.current_line}")
+            # print(f"執行行號: {self.current_line}")
         except Exception:
             pass
 
