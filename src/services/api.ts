@@ -1,5 +1,6 @@
 // API 服務層
 import axios from 'axios';
+import type { ScriptCheckIssue } from '../types';
 
 const API_BASE_URL = 'http://127.0.0.1:8000';
 
@@ -71,4 +72,8 @@ export const scriptApi = {
 
   // 滑鼠位置 API
   getMousePosition: () => api.get<{ x: number; y: number }>('/mouse/position'),
+
+  // 檢查腳本
+  checkScript: (content: string) =>
+    api.post<{ issues: ScriptCheckIssue[] }>('/scripts/check', { content }),
 };

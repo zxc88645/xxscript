@@ -180,7 +180,16 @@
                 <!-- 編輯器區域 -->
                 <div class="space-y-4">
                   <div class="flex items-center justify-between">
-                    <label class="text-sm font-medium text-text-muted">程式碼邏輯 (Python)</label>
+                    <div class="flex items-center gap-3">
+                      <label class="text-sm font-medium text-text-muted">程式碼邏輯 (Python)</label>
+                      <button
+                        @click="handleCheckCode"
+                        class="px-2 py-1 text-xs bg-bg-surface border border-border-base hover:bg-bg-surface/80 rounded transition-colors flex items-center gap-1 text-text-muted hover:text-primary"
+                        title="檢查代碼錯誤"
+                      >
+                        <span>🔍</span> 檢查
+                      </button>
+                    </div>
                     <QuickInsertBar
                       @insert="insertCode"
                       @insert-click="showClickModal = true"
@@ -240,6 +249,7 @@
 
 <script setup lang="ts">
 import { shallowRef } from 'vue';
+import * as monaco from 'monaco-editor';
 import type { editor } from 'monaco-editor';
 import AppSidebar from './components/AppSidebar.vue';
 import ScriptList from './components/ScriptList.vue';
@@ -252,7 +262,9 @@ import ConfirmModal from './components/common/ConfirmModal.vue';
 
 // Stores
 import { useThemeStore } from './stores/theme';
+import { useToast } from './composables/useToast';
 const themeStore = useThemeStore();
+const toast = useToast();
 
 // Composables
 import { useScripts } from './composables/useScripts';
@@ -288,6 +300,7 @@ const {
   deleteScript,
   toggleScriptEnabled,
   executeScript,
+  checkCurrentScript,
 } = useScripts();
 
 const { listenerRunning, toggleListener } = useKeyListener();
@@ -310,4 +323,28 @@ const { captureHotkey, startCapture, stopCapture } = useHotkeyCapture(
   selectedScript,
   saveCurrentScript,
 );
+
+const handleCheckCode = async () => {
+  const issues = await checkCurrentScript();
+  if (editorRef.value) {
+    const model = editorRef.value.getModel();
+    if (model) {
+      const markers = issues.map((issue) => ({
+        severity:
+          issue.severity === 'error' ? monaco.MarkerSeverity.Error : monaco.MarkerSeverity.Warning,
+        message: issue.message,
+        startLineNumber: issue.line,
+        startColumn: issue.column,
+        endLineNumber: issue.line,
+        endColumn: issue.column + 1, // 簡單處理，標記一個字符
+      }));
+      monaco.editor.setModelMarkers(model, 'owner', markers);
+    }
+  }
+  if (issues.length === 0) {
+    toast.success('檢查通過！代碼看起來沒問題');
+  } else {
+    toast.warning(`發現 ${issues.length} 個潛在問題`);
+  }
+};
 </script>

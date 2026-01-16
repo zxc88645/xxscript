@@ -157,6 +157,21 @@ export function useScripts() {
     loadScripts();
   });
 
+  /**
+   * 檢查當前腳本代碼
+   */
+  const checkCurrentScript = async () => {
+    if (!selectedScript.value) return [];
+    try {
+      const response = await scriptApi.checkScript(selectedScript.value.content);
+      return response.data.issues;
+    } catch (err) {
+      console.error('檢查腳本失敗:', err);
+      toast.error('檢查腳本失敗');
+      return [];
+    }
+  };
+
   return {
     scripts,
     selectedScript,
@@ -170,5 +185,6 @@ export function useScripts() {
     deleteScript,
     toggleScriptEnabled,
     executeScript,
+    checkCurrentScript,
   };
 }

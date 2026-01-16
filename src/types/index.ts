@@ -53,3 +53,15 @@ export interface StatusResponse {
   message: string;
   listener_running: boolean;
 }
+
+export interface ScriptCheckIssue {
+  line: number;
+  column: number;
+  message: string;
+  severity: 'error' | 'warning' | 'info' | 'hint';
+  code?: string;
+}
+
+export interface ScriptCheckResponse {
+  issues: ScriptCheckIssue[];
+}
