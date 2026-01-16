@@ -1,0 +1,54 @@
+"""
+腳本相關 API 路由
+"""
+from fastapi import APIRouter, HTTPException
+from typing import List
+
+from models.schemas import Script, ScriptCreate, ScriptUpdate, ExecutionResult
+from services.script_service import ScriptService
+from repositories.script_repository import ScriptRepository
+
+router = APIRouter(prefix="/scripts", tags=["scripts"])
+
+# 依賴注入 - 創建服務實例
+script_repository = ScriptRepository()
+script_service = ScriptService(script_repository)
+
+
+@router.get("", response_model=List[Script])
+def get_scripts():
+    """取得所有腳本"""
+    return script_service.get_all_scripts()
+
+
+@router.post("", response_model=Script)
+def create_script(script: ScriptCreate):
+    """建立新腳本"""
+    return script_service.create_script(script)
+
+
+@router.get("/{script_id}", response_model=Script)
+def get_script(script_id: str):
+    """取得特定腳本"""
+    script = script_service.get_script(script_id)
+    if not script:
+        raise HTTPException(status_code=404, detail="腳本不存在")
+    return script
+
+
+@router.put("/{script_id}", response_model=Script)
+def update_script(script_id: str, update: ScriptUpdate):
+    """更新腳本"""
+    script = script_service.update_script(script_id, update)
+    if not script:
+        raise HTTPException(status_code=404, detail="腳本不存在")
+    return script
+
+
+@router.delete("/{script_id}")
+def delete_script(script_id: str):
+    """刪除腳本"""
+    success = script_service.delete_script(script_id)
+    if not success:
+        raise HTTPException(status_code=404, detail="腳本不存在")
+    return {"status": "ok", "message": "腳本已刪除"}
