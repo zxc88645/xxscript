@@ -1,0 +1,58 @@
+[
+  {
+    "script_id": "script_8",
+    "timestamp": "2026-01-16T16:27:15.673545",
+    "status": "success",
+    "duration": 0.107,
+    "error": null
+  },
+  {
+    "script_id": "script_8",
+    "timestamp": "2026-01-16T16:27:21.014322",
+    "status": "success",
+    "duration": 0.112,
+    "error": null
+  },
+  {
+    "script_id": "script_8",
+    "timestamp": "2026-01-16T16:27:43.953389",
+    "status": "success",
+    "duration": 3.108,
+    "error": null
+  },
+  {
+    "script_id": "script_8",
+    "timestamp": "2026-01-16T16:27:59.584291",
+    "status": "success",
+    "duration": 8.818,
+    "error": null
+  },
+  {
+    "script_id": "script_8",
+    "timestamp": "2026-01-16T16:35:22.666610",
+    "status": "success",
+    "duration": 6.109,
+    "error": null
+  },
+  {
+    "script_id": "script_8",
+    "timestamp": "2026-01-16T16:35:37.086945",
+    "status": "success",
+    "duration": 6.107,
+    "error": null
+  },
+  {
+    "script_id": "script_8",
+    "timestamp": "2026-01-16T16:36:58.030364",
+    "status": "success",
+    "duration": 6.114,
+    "error": null
+  },
+  {
+    "script_id": "script_8",
+    "timestamp": "2026-01-16T16:40:25.629845",
+    "status": "stopped",
+    "duration": 5.004,
+    "error": null
+  }
+]

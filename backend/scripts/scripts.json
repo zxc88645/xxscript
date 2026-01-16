@@ -2,13 +2,13 @@
   {
     "id": "script_8",
     "name": "新腳本",
-    "content": "# 在此輸入腳本內容\nmove(200, 200)\n\n\nmouse_down('left')\nsleep(0.05)\nmouse_release('left')\n\nkey_down('1')\nsleep(0.05)\nkey_release('1')\n\n",
+    "content": "# 在此輸入腳本內容\nmove(200, 200)\nsleep(1.0)\nmove(200, 200)\nsleep(1.0)\nmove(200, 200)\nsleep(1.0)\nmove(200, 200)\nsleep(1.0)\nsleep(1.0)\nsleep(1.0)\nmove(200, 200)\n\nmouse_down('left')\nsleep(0.05)\nmouse_release('left')\n\nkey_down('1')\nsleep(0.05)\nkey_release('1')\n\n",
     "hotkey": "",
     "enabled": false
   },
   {
     "name": "新腳本",
-    "content": "# 在此輸入腳本內容\n\nmouse_down('left')\nsleep(0.05)\nmouse_release('left')\nmouse_down('right')\nsleep(0.05)\nmouse_release('right')\nmouse_down('middle')\nsleep(0.05)\nmouse_release('middle')\nmove(3314, 488)\nmove(2438, 552)\nmove(3788, 483)\nmove(3804, 495)\nmove(3804, 495)\nmove(3804, 495)\nmove(3804, 495)\nmove(3701, 818)\nmove(159, 33)\nmove(3777, 484)\nmove(3787, 490)\nmove(3854, 501)\ntype_text('文字')\nmove(3713, 621)\nkey_down('f')\nsleep(0.05)\nkey_release('f')\nkey_down('d')\nsleep(0.05)\nkey_release('d')\nkey_down('2')\nsleep(0.05)\nkey_release('2')\n\n\nmove(2500, 251)\nmove(2474, 248)\nmove(0, 0)\nmove(30, 37)\nmove(3775, 775)\nmove(39, 56)\nmove(0, 40)\nmove(4674, 277)\nmove(4787, 0)\nmove(4782, 518)\nmove(1702, 63)",
+    "content": "# 在此輸入腳本內容\n\nmouse_down('left')\nsleep(0.05)\nmouse_release('left')\nmouse_down('right')\nsleep(0.05)\nmouse_release('right')\nmouse_down('middle')\nsleep(0.05)\nmouse_release('middle')\nmove(3314, 488)\nmove(2438, 552)\nmove(3788, 483)\nmove(3804, 495)\nmove(3804, 495)\nmove(3804, 495)\nmove(3804, 495)\nmove(3701, 818)\nmove(159, 33)\nmove(3777, 484)\nmove(3787, 490)\nmove(3854, 501)\ntype_text('文字')\nmove(3713, 621)\nkey_down('f')\nsleep(0.05)\nkey_release('f')\nkey_down('d')\nsleep(0.05)\nkey_release('d')\nkey_down('2')\nsleep(0.05)\nkey_release('2')\n\n\nmove(2500, 251)\nmove(2474, 248)\nmove(0, 0)\nmove(30, 37)\nmove(3775, 775)\nmove(39, 56)\nmove(0, 40)\nmove(4674, 277)\nmove(4787, 0)\nmove(4782, 518)\nmove(1702, 63)\n",
     "hotkey": "",
     "id": "script_2",
     "enabled": false
