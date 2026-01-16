@@ -31,6 +31,8 @@ class ScriptEngine:
                 "move": self.move,
                 "press": self.press,
                 "type_text": self.type_text,
+                "scroll": self.scroll,
+                "print": print,
                 "sleep": time.sleep,
                 "mouse_position": self.get_mouse_position,
                 # 羅技風格的 down/release 函式
@@ -107,6 +109,10 @@ class ScriptEngine:
     def move(self, x: int, y: int):
         """移動滑鼠到絕對位置"""
         self.mouse.position = (x, y)
+
+    def scroll(self, dx: int, dy: int):
+        """滾動滑鼠滾輪"""
+        self.mouse.scroll(dx, dy)
 
     def press(self, key: str, duration: float = 0.05):
         """按下鍵盤按鍵 (包含按下、延遲、釋放)"""
