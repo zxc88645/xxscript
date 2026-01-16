@@ -3,9 +3,10 @@
 包括執行、錄製、歷史記錄、監聽器等
 """
 
-from fastapi import APIRouter, HTTPException, WebSocket, WebSocketDisconnect
 import asyncio
-import json
+import contextlib
+
+from fastapi import APIRouter, HTTPException, WebSocket, WebSocketDisconnect
 
 from core.engine import ScriptEngine
 from core.key_listener import KeyListener
@@ -24,6 +25,7 @@ history_service = HistoryService()
 script_repository = ScriptRepository()
 script_service = ScriptService(script_repository)
 
+
 # WebSocket 連線管理
 class ConnectionManager:
     def __init__(self):
@@ -39,12 +41,12 @@ class ConnectionManager:
 
     async def broadcast(self, message: dict):
         for connection in self.active_connections:
-            try:
+            with contextlib.suppress(Exception):
                 await connection.send_json(message)
-            except Exception:
-                pass
+
 
 manager = ConnectionManager()
+
 
 def on_f2_triggered():
     """當 F2 被按下時的回呼"""
@@ -52,15 +54,14 @@ def on_f2_triggered():
     # 建立事件迴圈來發送非同步廣播 (在 KeyListener 的執行緒中)
     loop = asyncio.new_event_loop()
     asyncio.set_event_loop(loop)
-    loop.run_until_complete(manager.broadcast({
-        "type": "coordinate",
-        "data": {"x": pos[0], "y": pos[1]}
-    }))
+    loop.run_until_complete(
+        manager.broadcast({"type": "coordinate", "data": {"x": pos[0], "y": pos[1]}})
+    )
     loop.close()
 
+
 key_listener = KeyListener(
-    on_trigger=lambda content: script_engine.execute(content, "hotkey"),
-    on_f2=on_f2_triggered
+    on_trigger=lambda content: script_engine.execute(content, "hotkey"), on_f2=on_f2_triggered
 )
 
 
@@ -69,7 +70,7 @@ async def websocket_endpoint(websocket: WebSocket):
     await manager.connect(websocket)
     try:
         while True:
-            # 保持連線，接收訊息（如果需要）
+            # 保持連線, 接收訊息(如果需要)
             await websocket.receive_text()
     except WebSocketDisconnect:
         manager.disconnect(websocket)

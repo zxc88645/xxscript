@@ -70,7 +70,7 @@ class KeyListener:
 
             # 處理系統功能鍵 (例如 F2)
             if key_str == "f2" and self.on_f2:
-                # 在新執行緒中執行回呼，以免阻塞監聽器
+                # 在新執行緒中執行回呼, 以免阻塞監聽器
                 threading.Thread(target=self.on_f2).start()
                 return
 
