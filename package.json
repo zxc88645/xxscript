@@ -17,7 +17,9 @@
     "backend:lint": "cd backend && python -m ruff check . --fix",
     "backend:format": "cd backend && python -m ruff format .",
     "backend:type-check": "cd backend && python -m mypy .",
+    "backend:dev": "cd backend && python main.py",
     "backend:check": "npm run backend:lint && npm run backend:format && npm run backend:type-check",
+    "dev:all": "run-p dev backend:dev",
     "prepare": "husky",
     "commitlint": "commitlint --edit"
   },

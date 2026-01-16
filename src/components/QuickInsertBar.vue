@@ -1,50 +1,53 @@
 <template>
-  <div class="flex gap-2">
+  <div
+    class="flex flex-wrap items-center gap-1.5 p-1 bg-bg-main rounded-xl border border-border-base"
+  >
+    <button
+      v-for="item in INSERT_ITEMS"
+      :key="item.label"
+      @click="$emit('insert', item.code)"
+      class="px-3 py-1.5 text-xs font-medium text-text-muted hover:text-primary hover:bg-bg-surface rounded-lg transition-all border border-transparent hover:border-border-base flex items-center gap-1.5"
+      :title="item.label"
+    >
+      <span>{{ item.icon }}</span>
+      {{ item.label }}
+    </button>
+    <div class="w-[1px] h-4 bg-border-base mx-1"></div>
     <button
       @click="$emit('insert-click')"
-      class="px-3 py-1 text-xs bg-blue-500/20 hover:bg-blue-500/30 text-blue-400 border border-blue-500/50 rounded transition-all"
-      title="插入滑鼠點擊"
+      class="px-3 py-1.5 text-xs font-medium text-text-muted hover:text-primary hover:bg-bg-surface rounded-lg transition-all border border-transparent hover:border-border-base flex items-center gap-1.5"
+      title="插入點擊"
     >
-      🖱️ 點擊
-    </button>
-    <button
-      @click="$emit('capture-position')"
-      class="px-3 py-1 text-xs bg-purple-500/20 hover:bg-purple-500/30 text-purple-400 border border-purple-500/50 rounded transition-all"
-      title="捕捉滑鼠位置"
-    >
-      ↗️ 移動
-    </button>
-    <button
-      @click="$emit('insert', 'type_text(\'文字\')')"
-      class="px-3 py-1 text-xs bg-green-500/20 hover:bg-green-500/30 text-green-400 border border-green-500/50 rounded transition-all"
-      title="插入文字輸入"
-    >
-      ⌨️ 輸入
+      <span>🖱️</span> 點擊
     </button>
     <button
       @click="$emit('insert-key')"
-      class="px-3 py-1 text-xs bg-yellow-500/20 hover:bg-yellow-500/30 text-yellow-400 border border-yellow-500/50 rounded transition-all"
+      class="px-3 py-1.5 text-xs font-medium text-text-muted hover:text-primary hover:bg-bg-surface rounded-lg transition-all border border-transparent hover:border-border-base flex items-center gap-1.5"
       title="插入按鍵"
     >
-      ⏎ 按鍵
+      <span>⌨️</span> 按鍵
     </button>
     <button
-      @click="$emit('insert', 'sleep(1.0)')"
-      class="px-3 py-1 text-xs bg-orange-500/20 hover:bg-orange-500/30 text-orange-400 border border-orange-500/50 rounded transition-all"
-      title="插入延遲"
+      @click="$emit('capture-position')"
+      class="px-3 py-1.5 text-xs font-medium text-primary bg-primary/5 hover:bg-primary/10 rounded-lg transition-all border border-primary/10 flex items-center gap-1.5"
+      title="座標擷取"
     >
-      ⏱️ 延遲
+      <span>🎯</span> 擷取座標 (F2)
     </button>
   </div>
 </template>
 
 <script setup lang="ts">
-interface Emits {
+const INSERT_ITEMS = [
+  { label: '延遲', icon: '⏱️', code: 'time.sleep(1.0)\n' },
+  { label: '滾動', icon: '↕️', code: 'pyautogui.scroll(-100)\n' },
+  { label: '提示', icon: '💡', code: 'print("Hello world")\n' },
+];
+
+defineEmits<{
   (e: 'insert', code: string): void;
   (e: 'insert-click'): void;
   (e: 'insert-key'): void;
   (e: 'capture-position'): void;
-}
-
-defineEmits<Emits>();
+}>();
 </script>
