@@ -2,15 +2,16 @@
 系統相關 API 路由
 包括執行、錄製、歷史記錄、監聽器等
 """
+
 from fastapi import APIRouter, HTTPException
 
-from models.schemas import ExecutionResult, RecorderStatus, MousePosition, StatusResponse
 from core.engine import ScriptEngine
-from core.recorder import ScriptRecorder
 from core.key_listener import KeyListener
-from services.script_service import ScriptService
-from services.history_service import HistoryService
+from core.recorder import ScriptRecorder
+from models.schemas import ExecutionResult, MousePosition, RecorderStatus, StatusResponse
 from repositories.script_repository import ScriptRepository
+from services.history_service import HistoryService
+from services.script_service import ScriptService
 
 router = APIRouter(tags=["system"])
 
@@ -27,9 +28,7 @@ key_listener = KeyListener(on_trigger=lambda content: script_engine.execute(cont
 def get_status():
     """取得系統狀態"""
     return StatusResponse(
-        status="ok",
-        message="XXScript Backend Running",
-        listener_running=key_listener.running
+        status="ok", message="XXScript Backend Running", listener_running=key_listener.running
     )
 
 
@@ -39,7 +38,7 @@ def execute_script(script_id: str):
     script = script_service.get_script(script_id)
     if not script:
         raise HTTPException(status_code=404, detail="腳本不存在")
-    
+
     result = script_engine.execute(script.content, script_id)
     return ExecutionResult(**result)
 

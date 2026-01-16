@@ -2,7 +2,7 @@
 配置管理
 集中管理所有應用配置
 """
-import os
+
 from pathlib import Path
 
 # 基礎路徑

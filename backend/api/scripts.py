@@ -1,12 +1,12 @@
 """
 腳本相關 API 路由
 """
-from fastapi import APIRouter, HTTPException
-from typing import List
 
-from models.schemas import Script, ScriptCreate, ScriptUpdate, ExecutionResult
-from services.script_service import ScriptService
+from fastapi import APIRouter, HTTPException
+
+from models.schemas import Script, ScriptCreate, ScriptUpdate
 from repositories.script_repository import ScriptRepository
+from services.script_service import ScriptService
 
 router = APIRouter(prefix="/scripts", tags=["scripts"])
 
@@ -15,7 +15,7 @@ script_repository = ScriptRepository()
 script_service = ScriptService(script_repository)
 
 
-@router.get("", response_model=List[Script])
+@router.get("", response_model=list[Script])
 def get_scripts():
     """取得所有腳本"""
     return script_service.get_all_scripts()
