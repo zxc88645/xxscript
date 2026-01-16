@@ -58,4 +58,4 @@ if __name__ == "__main__":
 
     from config.settings import API_HOST, API_PORT
 
-    uvicorn.run("main_refactored:app", host=API_HOST, port=API_PORT, reload=True)
+    uvicorn.run("main:app", host=API_HOST, port=API_PORT, reload=True)

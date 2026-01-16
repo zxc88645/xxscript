@@ -2,7 +2,7 @@
   {
     "id": "script_8",
     "name": "新腳本",
-    "content": "# 在此輸入腳本內容\nmove(100, 100)\n\n\n\nclick('left')\nclick('left')\nmouse_down('left')\nsleep(0.05)\nmouse_release('left')\nmouse_down('right')\nsleep(0.05)\nmouse_release('right')\nmouse_down('middle')\nsleep(0.05)\nmouse_release('middle')\nmove(1041, 346)\npress('2', 0.1)\ntype_text('文字')\nmouse_down('middle')\nsleep(0.05)\nmouse_release('middle')\nmove(812, 266)\ntype_text('文字')\n\n\ntype_text('文字')\nkey_down('3')\nsleep(0.05)\nkey_release('3')\nmove(234, 227)",
+    "content": "# 在此輸入腳本內容\nmove(100, 100)\n\n\n\nclick('left')\nclick('left')\nmouse_down('left')\nsleep(0.05)\nmouse_release('left')\nmouse_down('right')\nsleep(0.05)\nmouse_release('right')\nmouse_down('middle')\nsleep(0.05)\nmouse_release('middle')\nmove(1041, 346)\npress('2', 0.1)\ntype_text('文字')\nmouse_down('middle')\nsleep(0.05)\nmouse_release('middle')\nmove(812, 266)\ntype_text('文字')\n\n\ntype_text('文字')\nkey_down('3')\nsleep(0.05)\nkey_release('3')\nmove(234, 227)\ntime.sleep(1.0)\n\npyautogui.scroll(-100)\n",
     "hotkey": "",
     "enabled": false
   },
